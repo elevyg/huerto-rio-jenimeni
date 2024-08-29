@@ -82,7 +82,7 @@ export default function Component() {
           </nav>
           <div className="flex flex-1 justify-center">
             <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO%20HUERTO%20RIO%20JEINIMENI_Mesa%20de%20trabajo%201%20copia%204-iu75u2HU161TZybIUKmrXK4HS6D6BS.jpg"
+              src="/images/logo.jpg"
               alt="Huerto Río Jeinimeni Logo"
               width={80}
               height={80}
@@ -122,13 +122,13 @@ export default function Component() {
             </Button>
           </div>
           <div className="flex justify-center md:w-1/2">
-            <Image
+            {/* <Image
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO%20HUERTO%20RIO%20JEINIMENI_Mesa%20de%20trabajo%201%20copia%204-iu75u2HU161TZybIUKmrXK4HS6D6BS.jpg"
               alt="Huerto Río Jeinimeni Logo"
               width={400}
               height={400}
               className="rounded-full"
-            />
+            /> */}
           </div>
         </section>
 
