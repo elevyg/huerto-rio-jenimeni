@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import Image from "next/image";
 import { Button } from "~/components/ui/button";
@@ -7,7 +6,7 @@ import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { Card, CardContent } from "~/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import { MapPinIcon, PhoneIcon, MailIcon } from "lucide-react";
+import { MapPinIcon, PhoneIcon, MailIcon, MenuIcon } from "lucide-react";
 
 const programData = [
   {
@@ -55,6 +54,7 @@ const programData = [
 export default function Component() {
   const [hoveredTask, setHoveredTask] = useState<string | null>(null);
   const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) {
@@ -66,7 +66,19 @@ export default function Component() {
     <div className="min-h-screen bg-[#f4f1ec] text-[#333333]">
       <header className="sticky top-0 z-10 border-b border-[#2c5545] bg-[#f4f1ec] p-4 text-[#2c5545]">
         <div className="container mx-auto flex items-center justify-between">
-          <nav className="flex-1">
+          <div className="flex items-center">
+            <Image
+              src="/images/logo.jpg"
+              alt="Huerto Río Jeinimeni Logo"
+              width={60}
+              height={60}
+              className="mr-4 rounded-full"
+            />
+            <h1 className="hidden text-xl font-semibold md:block">
+              Huerto Río Jeinimeni
+            </h1>
+          </div>
+          <nav className="hidden md:block">
             <ul className="flex space-x-6">
               <li>
                 <a href="#about" className="hover:underline">
@@ -78,19 +90,6 @@ export default function Component() {
                   Programa
                 </a>
               </li>
-            </ul>
-          </nav>
-          <div className="flex flex-1 justify-center">
-            <Image
-              src="/images/logo.jpg"
-              alt="Huerto Río Jeinimeni Logo"
-              width={80}
-              height={80}
-              className="rounded-full"
-            />
-          </div>
-          <nav className="flex flex-1 justify-end">
-            <ul className="flex space-x-6">
               <li>
                 <a href="#apply" className="hover:underline">
                   Aplicar
@@ -103,7 +102,56 @@ export default function Component() {
               </li>
             </ul>
           </nav>
+          <Button
+            className="md:hidden"
+            variant="ghost"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            <MenuIcon />
+          </Button>
         </div>
+        {mobileMenuOpen && (
+          <nav className="mt-4 md:hidden">
+            <ul className="flex flex-col space-y-2">
+              <li>
+                <a
+                  href="#about"
+                  className="block rounded px-4 py-2 hover:bg-[#2c5545] hover:text-white"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Sobre Nosotros
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#program"
+                  className="block rounded px-4 py-2 hover:bg-[#2c5545] hover:text-white"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Programa
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#apply"
+                  className="block rounded px-4 py-2 hover:bg-[#2c5545] hover:text-white"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Aplicar
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#contact"
+                  className="block rounded px-4 py-2 hover:bg-[#2c5545] hover:text-white"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Contacto
+                </a>
+              </li>
+            </ul>
+          </nav>
+        )}
       </header>
 
       <main className="container mx-auto mt-12 px-4">
@@ -112,11 +160,11 @@ export default function Component() {
           className="mb-24 flex flex-col items-center md:flex-row"
         >
           <div className="mb-8 md:mb-0 md:w-1/2">
-            <h1 className="mb-6 font-serif text-5xl leading-tight">
+            <h2 className="mb-6 font-serif text-3xl leading-tight md:text-5xl">
               Cada día nos esforzamos por construir un futuro donde los
               alimentos se cultiven con cuidado, por y para las personas que
               comparten estos valores.
-            </h1>
+            </h2>
             <Button className="bg-[#2c5545] px-6 py-3 text-lg text-white hover:bg-[#1e3c2f]">
               Conócenos
             </Button>
@@ -125,8 +173,8 @@ export default function Component() {
             {/* <Image
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO%20HUERTO%20RIO%20JEINIMENI_Mesa%20de%20trabajo%201%20copia%204-iu75u2HU161TZybIUKmrXK4HS6D6BS.jpg"
               alt="Huerto Río Jeinimeni Logo"
-              width={400}
-              height={400}
+              width={300}
+              height={300}
               className="rounded-full"
             /> */}
           </div>
@@ -142,19 +190,19 @@ export default function Component() {
               alt="Voluntarios en Huerto Río Jeinimeni"
               width={600}
               height={400}
-              className="rounded-lg"
+              className="w-full rounded-lg"
             />
           </div>
           <div className="md:w-1/2 md:pl-12">
-            <h2 className="mb-6 font-serif text-3xl">
+            <h2 className="mb-6 font-serif text-2xl md:text-3xl">
               Sobre Huerto Río Jeinimeni
             </h2>
-            <p className="mb-6 text-lg">
+            <p className="mb-6 text-base md:text-lg">
               Durante años, hemos estado cultivando la tierra, compartiendo
               conocimientos y creando conciencia sobre la importancia vital de
               la agricultura regenerativa en nuestro sistema alimentario.
             </p>
-            <p className="mb-6 text-lg">
+            <p className="mb-6 text-base md:text-lg">
               Ubicado en el hermoso Valle de Chile Chico, Aysén-Patagonia,
               Huerto Río Jeinimeni ofrece una experiencia única de voluntariado
               en agricultura regenerativa, con el objetivo de desarrollar
@@ -167,8 +215,10 @@ export default function Component() {
         </section>
 
         <section id="program" className="mb-24">
-          <h2 className="mb-6 font-serif text-3xl">Programa de Pasantes</h2>
-          <div>
+          <h2 className="mb-6 font-serif text-2xl md:text-3xl">
+            Programa de Pasantes
+          </h2>
+          <div className="overflow-x-auto">
             <table className="w-full border-collapse">
               <thead>
                 <tr className="bg-[#2c5545] text-white">
@@ -209,8 +259,8 @@ export default function Component() {
             </table>
           </div>
           <div className="mt-4">
-            <h3 className="mb-4 font-serif text-2xl">Requisitos:</h3>
-            <ul className="list-inside list-disc space-y-2 text-lg">
+            <h3 className="mb-4 font-serif text-xl md:text-2xl">Requisitos:</h3>
+            <ul className="list-inside list-disc space-y-2 text-base md:text-lg">
               <li>Capacidad de trabajo en equipo</li>
               <li>Tolerancia a condiciones climáticas adversas</li>
               <li>Interés en aspectos de la producción comercial</li>
@@ -226,13 +276,15 @@ export default function Component() {
         </section>
 
         <section id="apply" className="mb-24">
-          <h2 className="mb-6 font-serif text-3xl">Aplicar al Programa</h2>
+          <h2 className="mb-6 font-serif text-2xl md:text-3xl">
+            Aplicar al Programa
+          </h2>
           <Tabs defaultValue="video">
             <TabsList className="mb-6">
-              <TabsTrigger value="video" className="text-lg">
+              <TabsTrigger value="video" className="text-base md:text-lg">
                 Video
               </TabsTrigger>
-              <TabsTrigger value="form" className="text-lg">
+              <TabsTrigger value="form" className="text-base md:text-lg">
                 Formulario
               </TabsTrigger>
             </TabsList>
@@ -240,10 +292,10 @@ export default function Component() {
               <Card>
                 <CardContent>
                   <div className="mt-6 space-y-6">
-                    <p className="text-lg">
+                    <p className="text-base md:text-lg">
                       Sube un video respondiendo a las siguientes preguntas:
                     </p>
-                    <ul className="list-inside list-disc space-y-2 text-lg">
+                    <ul className="list-inside list-disc space-y-2 text-base md:text-lg">
                       <li>¿Por qué te gustaría venir?</li>
                       <li>¿Qué experiencia previa tienes?</li>
                       <li>¿Qué harás con el conocimiento adquirido?</li>
@@ -256,16 +308,16 @@ export default function Component() {
                       type="file"
                       accept="video/*"
                       onChange={handleVideoUpload}
-                      className="text-lg"
+                      className="text-base md:text-lg"
                     />
                     {videoFile && (
-                      <p className="text-lg">
+                      <p className="text-base md:text-lg">
                         Archivo seleccionado: {videoFile.name}
                       </p>
                     )}
                     <Button
                       type="submit"
-                      className="bg-[#2c5545] px-6 py-3 text-lg text-white hover:bg-[#1e3c2f]"
+                      className="bg-[#2c5545] px-6 py-3 text-base text-white hover:bg-[#1e3c2f] md:text-lg"
                     >
                       Subir Video
                     </Button>
@@ -278,7 +330,10 @@ export default function Component() {
                 <CardContent>
                   <form className="mt-6 space-y-6">
                     <div>
-                      <label htmlFor="why" className="mb-2 block text-lg">
+                      <label
+                        htmlFor="why"
+                        className="mb-2 block text-base md:text-lg"
+                      >
                         ¿Por qué te gustaría venir?
                       </label>
                       <Textarea
@@ -290,7 +345,7 @@ export default function Component() {
                     <div>
                       <label
                         htmlFor="experience"
-                        className="mb-2 block text-lg"
+                        className="mb-2 block text-base md:text-lg"
                       >
                         ¿Qué experiencia previa tienes?
                       </label>
@@ -301,7 +356,10 @@ export default function Component() {
                       />
                     </div>
                     <div>
-                      <label htmlFor="knowledge" className="mb-2 block text-lg">
+                      <label
+                        htmlFor="knowledge"
+                        className="mb-2 block text-base md:text-lg"
+                      >
                         ¿Qué harás con el conocimiento adquirido?
                       </label>
                       <Textarea
@@ -311,7 +369,10 @@ export default function Component() {
                       />
                     </div>
                     <div>
-                      <label htmlFor="skills" className="mb-2 block text-lg">
+                      <label
+                        htmlFor="skills"
+                        className="mb-2 block text-base md:text-lg"
+                      >
                         ¿Cuáles son tus habilidades y competencias que puedes
                         aportar al huerto?
                       </label>
@@ -323,7 +384,7 @@ export default function Component() {
                     </div>
                     <Button
                       type="submit"
-                      className="bg-[#2c5545] px-6 py-3 text-lg text-white hover:bg-[#1e3c2f]"
+                      className="md: bg-[#2c5545] px-6 py-3 text-base text-lg text-white hover:bg-[#1e3c2f]"
                     >
                       Enviar Aplicación
                     </Button>
@@ -335,18 +396,18 @@ export default function Component() {
         </section>
 
         <section id="contact" className="mb-24">
-          <h2 className="mb-6 font-serif text-3xl">Contacto</h2>
+          <h2 className="mb-6 font-serif text-2xl md:text-3xl">Contacto</h2>
           <Card>
             <CardContent className="mt-6 flex flex-col space-y-4">
-              <div className="flex items-center text-lg">
+              <div className="flex items-center text-base md:text-lg">
                 <MapPinIcon className="mr-4 text-[#2c5545]" />
                 <span>Valle de Chile Chico, Aysen-Patagonia</span>
               </div>
-              <div className="flex items-center text-lg">
+              <div className="flex items-center text-base md:text-lg">
                 <PhoneIcon className="mr-4 text-[#2c5545]" />
                 <span>+56940673741</span>
               </div>
-              <div className="flex items-center text-lg">
+              <div className="flex items-center text-base md:text-lg">
                 <MailIcon className="mr-4 text-[#2c5545]" />
                 <span>huertoriojeinimeni@gmail.com</span>
               </div>
@@ -357,7 +418,7 @@ export default function Component() {
 
       <footer className="mt-12 bg-[#2c5545] p-6 text-white">
         <div className="container mx-auto text-center">
-          <p className="text-lg">
+          <p className="text-base md:text-lg">
             &copy; 2024 Huerto Río Jeinimeni. Todos los derechos reservados.
           </p>
         </div>
