@@ -7,6 +7,7 @@ import { Textarea } from "~/components/ui/textarea";
 import { Card, CardContent } from "~/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { MapPinIcon, PhoneIcon, MailIcon, MenuIcon } from "lucide-react";
+import Tasks from "./tasks";
 
 const programData = [
   {
@@ -218,13 +219,14 @@ export default function Component() {
           <h2 className="mb-6 font-serif text-2xl md:text-3xl">
             Programa de Pasantes
           </h2>
-          <div className="overflow-x-auto">
+          <Tasks />
+          <div className="hidden overflow-x-auto">
             <table className="w-full border-collapse">
               <thead>
                 <tr className="bg-[#2c5545] text-white">
                   <th className="p-2 text-left">Generación</th>
                   <th className="p-2 text-left">Fechas</th>
-                  <th className="p-2 text-center">Cosecha</th>
+                  <th className="p-2 text-center">Compost</th>
                   <th className="p-2 text-center">Almácigos</th>
                   <th className="p-2 text-center">Siembra directa</th>
                   <th className="p-2 text-center">Transplante</th>
