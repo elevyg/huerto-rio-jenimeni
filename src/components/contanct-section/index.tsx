@@ -17,7 +17,7 @@ export default function ContactSection() {
           </div>
           <div className="flex items-center text-base md:text-lg">
             <MailIcon className="mr-4 text-[#2c5545]" />
-            <span>huertoriojeinimeni@gmail.com</span>
+            <span>huerto@jeinimeni.com</span>
           </div>
         </CardContent>
       </Card>

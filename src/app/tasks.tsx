@@ -42,7 +42,7 @@ const schedule = [
 
 const TaskBox = ({ task, isActive }: { task: Task; isActive: boolean }) => (
   <TooltipProvider>
-    <Tooltip>
+    <Tooltip delayDuration={0}>
       <TooltipTrigger asChild>
         <div
           className={`h-20 w-full ${
