@@ -1,6 +1,6 @@
 "use client";
 import { APIProvider, Map } from "@vis.gl/react-google-maps";
-import { MailIcon, MapPinIcon, PhoneIcon } from "lucide-react";
+import { MapPinIcon } from "lucide-react";
 import ContactSection from "~/components/contanct-section";
 import { Button } from "~/components/ui/button";
 

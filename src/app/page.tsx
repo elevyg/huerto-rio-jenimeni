@@ -1,14 +1,13 @@
 "use client";
-import { MailIcon, MapPinIcon, PhoneIcon } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import ContactSection from "~/components/contanct-section";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Textarea } from "~/components/ui/textarea";
 import Tasks from "./tasks";
-import ContactSection from "~/components/contanct-section";
 
 const programData = [
   {

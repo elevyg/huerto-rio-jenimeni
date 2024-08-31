@@ -11,24 +11,23 @@ export default function Navbar() {
     <header className="sticky top-0 z-10 border-b border-[#2c5545] bg-[#f4f1ec] p-4 text-[#2c5545]">
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center">
-          <Image
-            src="/images/logo.jpg"
-            alt="Huerto Río Jeinimeni Logo"
-            width={60}
-            height={60}
-            className="mr-4 rounded-full"
-          />
+          <Link href="/" className="hover:underline">
+            <Image
+              src="/images/logo.jpg"
+              alt="Huerto Río Jeinimeni Logo"
+              width={60}
+              height={60}
+              className="mr-4 rounded-full"
+            />
+          </Link>
           <h1 className="hidden text-xl font-semibold md:block">
-            Huerto Río Jeinimeni
+            <Link href="/" className="hover:underline">
+              Huerto Río Jeinimeni
+            </Link>
           </h1>
         </div>
         <nav className="hidden md:block">
           <ul className="flex space-x-6">
-            <li>
-              <Link href="/" className="hover:underline">
-                Inicio
-              </Link>
-            </li>
             <li>
               <Link href="/#about" className="hover:underline">
                 Sobre Nosotros
@@ -68,40 +67,49 @@ export default function Navbar() {
         <nav className="mt-4 md:hidden">
           <ul className="flex flex-col space-y-2">
             <li>
-              <a
-                href="#about"
+              <Link
+                href="/#about"
                 className="block rounded px-4 py-2 hover:bg-[#2c5545] hover:text-white"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Sobre Nosotros
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#program"
+              <Link
+                href="/#program"
                 className="block rounded px-4 py-2 hover:bg-[#2c5545] hover:text-white"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Programa
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#apply"
+              <Link
+                href="/#apply"
                 className="block rounded px-4 py-2 hover:bg-[#2c5545] hover:text-white"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Aplicar
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#contact"
+              <Link
+                href="/#contact"
                 className="block rounded px-4 py-2 hover:bg-[#2c5545] hover:text-white"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Contacto
-              </a>
+              </Link>
+            </li>
+            <li>
+              <Link
+                className="block rounded px-4 py-2 hover:bg-[#2c5545] hover:text-white"
+                href="/como-llegar"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Como Llegar
+              </Link>
             </li>
           </ul>
         </nav>
