@@ -157,12 +157,18 @@ const MultiSelector = ({
         case "Delete":
           if (value.length > 0) {
             if (activeIndex !== -1 && activeIndex < value.length) {
-              onValueChangeHandler(value[activeIndex]);
+              const selectedItem = value[activeIndex];
+              if (selectedItem !== undefined) {
+                onValueChangeHandler(selectedItem);
+              }
               moveCurrent();
             } else {
               if (target.selectionStart === 0) {
                 if (selectedValue === inputValue || isValueSelected) {
-                  onValueChangeHandler(value[value.length - 1]);
+                  const lastValue = value[value.length - 1];
+                  if (lastValue) {
+                    onValueChangeHandler(lastValue);
+                  }
                 }
               }
             }
