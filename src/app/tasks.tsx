@@ -17,7 +17,7 @@ import {
 
 const tasks = [
   { id: 1, name: "Compost", color: "bg-amber-600", emoji: "🍂" },
-  { id: 2, name: "Almacigos", color: "bg-green-300", emoji: "🌱" },
+  { id: 2, name: "Almacigos", color: "bg-green-800", emoji: "🌱" },
   { id: 3, name: "Siembra directa", color: "bg-blue-500", emoji: "🌾" },
   { id: 4, name: "Transplante", color: "bg-purple-500", emoji: "🪴" },
   { id: 5, name: "Cosecha", color: "bg-yellow-500", emoji: "🍎" },
@@ -52,8 +52,8 @@ const TaskBox = ({ task, isActive }: { task: Task; isActive: boolean }) => (
           <div
             className={`absolute inset-0 flex flex-col items-center justify-center ${isActive ? "text-white" : "text-gray-800"} p-1 text-center text-xs`}
           >
-            <span className="mb-1 text-2xl md:hidden">{task.emoji}</span>
-            <p className="md:hidden">{task.name}</p>
+            <span className="mb-1 text-2xl lg:hidden">{task.emoji}</span>
+            <p className="lg:hidden">{task.name}</p>
           </div>
         </div>
       </TooltipTrigger>
