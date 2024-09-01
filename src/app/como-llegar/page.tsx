@@ -1,5 +1,5 @@
 "use client";
-import { APIProvider, Map } from "@vis.gl/react-google-maps";
+import { APIProvider, Map, Marker } from "@vis.gl/react-google-maps";
 import { MapPinIcon } from "lucide-react";
 import ContactSection from "~/components/contanct-section";
 import { Button } from "~/components/ui/button";
@@ -12,18 +12,23 @@ export default function Component() {
           Cómo Llegar a Huerto Río Jeinimeni
         </h1>
         <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_TOKEN!}>
-          <Map
-            className="h-[40vh] w-[90vw] overflow-hidden rounded-md"
-            style={{ width: "90vw", height: "40vh" }}
-            defaultCenter={{
-              lat: -46.58920260557373,
-              lng: -71.67549025663874,
-            }}
-            defaultZoom={18}
-            mapTypeId="satellite"
-            gestureHandling={"greedy"}
-            disableDefaultUI={true}
-          />
+          <div className="mb-6 flex justify-center">
+            <Map
+              className="h-[40vh] w-[90vw] overflow-hidden rounded-md"
+              style={{ width: "auto", height: "40vh" }}
+              defaultCenter={{
+                lat: -46.58920260557373,
+                lng: -71.67549025663874,
+              }}
+              defaultZoom={18}
+              mapTypeId="satellite"
+              disableDefaultUI={true}
+            >
+              <Marker
+                position={{ lat: -46.58920260557373, lng: -71.67549025663874 }}
+              />
+            </Map>
+          </div>
         </APIProvider>
 
         <div className="grid gap-8 md:grid-cols-2">
