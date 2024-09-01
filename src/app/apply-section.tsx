@@ -21,6 +21,7 @@ import { z } from "zod";
 import { formSchema, type FormData } from "~/schema/form";
 import { onSubmitAction } from "~/server/formSubmit";
 import { X } from "lucide-react";
+import { videoSubmit } from "~/server/videoSubmit";
 
 const options = schedule.map((program) => ({
   value: program.group,
@@ -52,14 +53,18 @@ export default function ApplySection() {
     },
   });
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!videoFile) return;
+    const formData = new FormData();
+    formData.append("video", videoFile);
+    formData.append("groups", JSON.stringify(value));
+    void videoSubmit(formData);
     // Handle form submission
   };
 
   const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) {
-      console.log(e.target.files[0]);
       setVideoFile(e.target.files[0]);
     }
   };
@@ -87,11 +92,7 @@ export default function ApplySection() {
         <TabsContent value="video">
           <Card>
             <CardContent>
-              <form
-                onSubmit={() => {
-                  return;
-                }}
-              >
+              <form onSubmit={onSubmit}>
                 <div className="mt-6 space-y-6">
                   <p className="text-base md:text-lg">
                     Sube un video respondiendo a las siguientes preguntas:
