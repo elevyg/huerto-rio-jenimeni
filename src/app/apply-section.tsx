@@ -1,9 +1,11 @@
 "use client";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import { type ComponentProps, useRef, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { X } from "lucide-react";
+import { useRef, useState, type ComponentProps } from "react";
+import { useFormState } from "react-dom";
+import { useForm } from "react-hook-form";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
-import { Input } from "~/components/ui/input";
 import {
   MultiSelector,
   MultiSelectorContent,
@@ -12,16 +14,13 @@ import {
   MultiSelectorList,
   MultiSelectorTrigger,
 } from "~/components/ui/multiselect";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Textarea } from "~/components/ui/textarea";
 import { schedule } from "~/data/program-data";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useFormState } from "react-dom";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { formSchema, type FormData } from "~/schema/form";
 import { onSubmitAction } from "~/server/formSubmit";
-import { X } from "lucide-react";
 import { videoSubmit } from "~/server/videoSubmit";
+import { UploadButton } from "~/utils/uploadthing";
 
 const options = schedule.map((program) => ({
   value: program.group,
@@ -29,8 +28,17 @@ const options = schedule.map((program) => ({
 }));
 
 export default function ApplySection() {
-  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [value, setValue] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [compressedVideoUrl, setCompressedVideoUrl] = useState<string | null>(
+    null,
+  );
+  const [videoSizes, setVideoSizes] = useState<{
+    original: number;
+    compressed: number;
+  } | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const [state, formAction] = useFormState(onSubmitAction, {
     message: "",
@@ -53,19 +61,22 @@ export default function ApplySection() {
     },
   });
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!videoFile) return;
-    const formData = new FormData();
-    formData.append("video", videoFile);
-    formData.append("groups", JSON.stringify(value));
-    void videoSubmit(formData);
-    // Handle form submission
-  };
+    if (!videoUrl) return;
 
-  const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.[0]) {
-      setVideoFile(e.target.files[0]);
+    setIsSubmitting(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("video", videoUrl);
+      formData.append("groups", JSON.stringify(value));
+      await videoSubmit(formData);
+    } catch (error) {
+      console.error("Error submitting video:", error);
+      // You might want to set an error state here or show an error message to the user
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -119,22 +130,41 @@ export default function ApplySection() {
                       loop={false}
                     />
                   </div>
-                  <Input
-                    type="file"
-                    accept="video/*"
-                    onChange={handleVideoUpload}
-                    className="text-base md:text-lg"
+                  <UploadButton
+                    endpoint="videoUploader"
+                    disabled={!!videoUrl}
+                    content={{
+                      button({ ready, isUploading }) {
+                        if (videoUrl) return <div>Video subido 🎉</div>;
+                        if (ready) return <div>Subir video</div>;
+                        if (isUploading) return <div>Subiendo...</div>;
+
+                        return "...";
+                      },
+                      // allowedContent({ isUploading }) {
+                      //   if (isUploading) return "Subiendo video";
+                      //   return `Video, máximo 16MB`;
+                      // },
+                    }}
+                    className="mt-4 items-start justify-start self-start ut-button:bg-[#937a4b] ut-button:ut-readying:bg-[#0f1e18]"
+                    onUploadError={(error) => {
+                      alert(error.message);
+                    }}
+                    onClientUploadComplete={(res) => {
+                      // Do something with the response
+                      console.log(res);
+                      const url = res?.[0]?.url;
+                      if (!url) return;
+                      setVideoUrl(url);
+                    }}
                   />
-                  {videoFile && (
-                    <p className="text-base md:text-lg">
-                      Archivo seleccionado: {videoFile.name}
-                    </p>
-                  )}
+
                   <Button
                     type="submit"
                     className="bg-[#2c5545] px-6 py-3 text-base text-white hover:bg-[#1e3c2f] md:text-lg"
+                    disabled={isSubmitting}
                   >
-                    Subir Video
+                    Enviar postulación
                   </Button>
                 </div>
               </form>
@@ -265,7 +295,7 @@ export default function ApplySection() {
                   type="submit"
                   className="md: bg-[#2c5545] px-6 py-3 text-lg text-white hover:bg-[#1e3c2f]"
                 >
-                  Enviar Aplicación
+                  Enviar postulación
                 </Button>
               </form>
             </CardContent>

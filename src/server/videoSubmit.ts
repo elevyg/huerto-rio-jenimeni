@@ -1,3 +1,4 @@
+"use server";
 import { videoFormSchema } from "~/schema/videoForm";
 
 export async function videoSubmit(data: FormData) {
@@ -6,6 +7,7 @@ export async function videoSubmit(data: FormData) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     formData.groups = JSON.parse(formData.groups);
   }
+
   const parsed = videoFormSchema.safeParse(formData);
   if (!parsed.success) {
     return {
@@ -13,5 +15,9 @@ export async function videoSubmit(data: FormData) {
       issues: parsed.error.issues,
     };
   }
-  console.log(parsed.data);
+  if (!formData.video) {
+    return {
+      message: "No video file provided",
+    };
+  }
 }
