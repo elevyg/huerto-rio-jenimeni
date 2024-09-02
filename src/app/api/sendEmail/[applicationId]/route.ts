@@ -1,8 +1,7 @@
-import { type NextApiResponse, type NextApiRequest } from "next";
 import { Resend } from "resend";
 
 export const GET = async (
-  req: NextApiRequest,
+  req: Request,
   { params }: { params: { slug: string } },
 ) => {
   console.log(params);
