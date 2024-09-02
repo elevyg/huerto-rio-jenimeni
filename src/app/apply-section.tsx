@@ -2,9 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { X } from "lucide-react";
 import { useRef, useState, type ComponentProps } from "react";
-import { useFormState } from "react-dom";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
@@ -19,7 +17,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Textarea } from "~/components/ui/textarea";
 import { schedule } from "~/data/program-data";
-import { applicantSchema } from "~/schema/applicantInfo";
+import { type ApplicantSchema, applicantSchema } from "~/schema/applicantInfo";
 import { formSchema, type FormData } from "~/schema/form";
 import { onSubmitAction } from "~/server/formSubmit";
 import { videoSubmit } from "~/server/videoSubmit";
@@ -30,25 +28,20 @@ const options = schedule.map((program) => ({
   label: `${program.group} - ${program.dateRange}`,
 }));
 
-const completeFormSchema = formSchema.merge(applicantSchema);
-
-type CompleteFormSchema = z.infer<typeof completeFormSchema>;
-
 export default function ApplySection() {
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [value, setValue] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [compressedVideoUrl, setCompressedVideoUrl] = useState<string | null>(
-    null,
-  );
-  const [videoSizes, setVideoSizes] = useState<{
-    original: number;
-    compressed: number;
-  } | null>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
-  const [state, formAction] = useFormState(onSubmitAction, {
-    message: "",
+  const applicantInfoForm = useForm<ApplicantSchema>({
+    resolver: zodResolver(applicantSchema),
+    mode: "onBlur",
+    reValidateMode: "onBlur",
+    defaultValues: {
+      name: "",
+      phone: "",
+      email: "",
+    },
   });
 
   const {
@@ -56,18 +49,14 @@ export default function ApplySection() {
     handleSubmit,
     formState: { errors },
     setValue: setFormValue,
-  } = useForm<CompleteFormSchema>({
-    resolver: zodResolver(formSchema.merge(applicantSchema)),
+  } = useForm<FormData>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       groups: [],
       why: "",
       experience: "",
       knowledge: "",
       skills: "",
-      name: "",
-      phone: "",
-      email: "",
-      ...(state?.fields ?? {}),
     },
   });
 
@@ -90,6 +79,45 @@ export default function ApplySection() {
     }
   };
 
+  const handleFormSubmit = handleSubmit(
+    async (payload) => {
+      const form = new FormData();
+      form.append("groups", JSON.stringify(payload.groups));
+      form.append("why", payload.why);
+      form.append("experience", payload.experience);
+      form.append("knowledge", payload.knowledge);
+      form.append("skills", payload.skills);
+
+      const applicantInfoNameOk = await applicantInfoForm.trigger("name");
+      if (!applicantInfoNameOk) {
+        applicantInfoForm.setFocus("name");
+        return;
+      }
+      const applicantInfoPhoneOk = await applicantInfoForm.trigger("phone");
+      if (!applicantInfoPhoneOk) {
+        applicantInfoForm.setFocus("phone");
+        return;
+      }
+      const applicantInfoEmailOk = await applicantInfoForm.trigger("email");
+      if (!applicantInfoEmailOk) {
+        applicantInfoForm.setFocus("email");
+        return;
+      }
+
+      const applicantInfo = applicantInfoForm.getValues();
+      form.append("name", applicantInfo.name);
+      form.append("phone", applicantInfo.phone);
+      form.append("email", applicantInfo.email);
+
+      void onSubmitAction(form);
+
+      console.log("client form", form);
+    },
+    (error) => {
+      console.log(error);
+    },
+  );
+
   const handleMultiSelectorChange = (newValue: string[]) => {
     setValue(newValue);
     setFormValue("groups", newValue);
@@ -110,13 +138,13 @@ export default function ApplySection() {
               </label>
               <Input
                 id="name"
-                {...register("name")}
+                {...applicantInfoForm.register("name")}
                 placeholder="Tu nombre completo"
                 className="w-full"
               />
-              {errors.name && (
+              {applicantInfoForm.formState.errors.name && (
                 <p className="mt-1 text-sm text-red-500">
-                  {errors.name.message}
+                  {applicantInfoForm.formState.errors.name?.message}
                 </p>
               )}
             </div>
@@ -129,13 +157,13 @@ export default function ApplySection() {
               </label>
               <Input
                 id="phone"
-                {...register("phone")}
+                {...applicantInfoForm.register("phone")}
                 placeholder="Tu número de teléfono"
                 className="w-full"
               />
-              {errors.phone && (
+              {applicantInfoForm.formState.errors.phone && (
                 <p className="mt-1 text-sm text-red-500">
-                  {errors.phone.message}
+                  {applicantInfoForm.formState.errors.phone?.message}
                 </p>
               )}
             </div>
@@ -148,13 +176,13 @@ export default function ApplySection() {
               </label>
               <Input
                 id="email"
-                {...register("email")}
+                {...applicantInfoForm.register("email")}
                 placeholder="Tu correo electrónico"
                 className="w-full"
               />
-              {errors.email && (
+              {applicantInfoForm.formState.errors.email && (
                 <p className="mt-1 text-sm text-red-500">
-                  {errors.email.message}
+                  {applicantInfoForm.formState.errors.email?.message}
                 </p>
               )}
             </div>
@@ -244,38 +272,7 @@ export default function ApplySection() {
         <TabsContent value="form">
           <Card>
             <CardContent>
-              <form
-                ref={formRef}
-                action={formAction}
-                onSubmit={(evt) => {
-                  evt.preventDefault();
-                  void handleSubmit((payload) => {
-                    const form = new FormData();
-                    form.append("groups", JSON.stringify(payload.groups));
-                    form.append("why", payload.why);
-                    form.append("experience", payload.experience);
-                    form.append("knowledge", payload.knowledge);
-                    form.append("skills", payload.skills);
-                    formAction(form);
-                  })(evt);
-                }}
-                className="mt-6 space-y-6"
-              >
-                {state?.message !== "" && !state.issues && (
-                  <div className="text-red-500">{state.message}</div>
-                )}
-                {state?.issues && (
-                  <div className="text-red-500">
-                    <ul>
-                      {state.issues.map((issue) => (
-                        <li key={issue} className="flex gap-1">
-                          <X fill="red" />
-                          {issue}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+              <form onSubmit={handleFormSubmit} className="mt-6 space-y-6">
                 <div>
                   <label
                     htmlFor="groups"
@@ -363,7 +360,7 @@ export default function ApplySection() {
                 </div>
                 <Button
                   type="submit"
-                  className="md: bg-[#2c5545] px-6 py-3 text-lg text-white hover:bg-[#1e3c2f]"
+                  className="px-6 py-3 text-lg text-white hover:bg-[#1e3c2f] md:bg-[#2c5545]"
                 >
                   Enviar postulación
                 </Button>

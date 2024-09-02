@@ -7,3 +7,5 @@ export const applicantSchema = z.object({
     .min(6, "El número de teléfono debe tener al menos 6 dígitos"),
   email: z.string().email("El correo electrónico no es válido"),
 });
+
+export type ApplicantSchema = z.infer<typeof applicantSchema>;
