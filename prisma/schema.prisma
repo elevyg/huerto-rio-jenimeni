@@ -16,7 +16,7 @@ model User {
     phone             String
     email             String           @unique
     baseApplication   BaseApplication? @relation(fields: [baseApplicationId], references: [id])
-    baseApplicationId Int?
+    baseApplicationId Int?             @unique
 }
 
 model BaseApplication {
@@ -27,7 +27,7 @@ model BaseApplication {
 
     formApplication  FormApplication?
     videoApplication VideoApplication?
-    User             User[]
+    User             User?
 
     @@index([createdAt])
 }
