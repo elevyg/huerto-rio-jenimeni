@@ -73,7 +73,7 @@ export default function Component() {
 
       <section
         id="program"
-        className="mb-24 flex flex-col items-center md:flex-row"
+        className="mb-24 flex flex-col-reverse items-center md:flex-row"
       >
         <div className="flex-1">
           <h2 className="mb-6 font-serif text-2xl md:text-3xl">
