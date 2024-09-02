@@ -31,7 +31,7 @@ const options = schedule.map((program) => ({
 export default function ApplySection() {
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [groups, setGroups] = useState<string[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmittingVideoForm, setIsSubmittingVideoForm] = useState(false);
 
   const handleMultiGroupSelectorChange = (newValue: string[]) => {
     setGroups(newValue);
@@ -52,7 +52,7 @@ export default function ApplySection() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting: isSubmittingForm },
     setValue: setFormValue,
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -92,7 +92,7 @@ export default function ApplySection() {
     e.preventDefault();
     if (!videoUrl) return;
 
-    setIsSubmitting(true);
+    setIsSubmittingVideoForm(true);
 
     try {
       const form = new FormData();
@@ -104,7 +104,7 @@ export default function ApplySection() {
       console.error("Error submitting video:", error);
       // You might want to set an error state here or show an error message to the user
     } finally {
-      setIsSubmitting(false);
+      setIsSubmittingVideoForm(false);
     }
   };
 
@@ -244,11 +244,10 @@ export default function ApplySection() {
                     content={{
                       button({ ready, isUploading, uploadProgress }) {
                         if (videoUrl) return <div>Video subido 🎉</div>;
-                        if (ready) return <div>Subir video</div>;
                         if (isUploading || uploadProgress > 0)
                           return <div>Subiendo...</div>;
-
-                        return "...";
+                        if (!ready) return <div>...</div>;
+                        return "Subir video";
                       },
                       // allowedContent({ isUploading }) {
                       //   if (isUploading) return "Subiendo video";
@@ -270,9 +269,11 @@ export default function ApplySection() {
                   <Button
                     type="submit"
                     className="bg-[#2c5545] px-6 py-3 text-base text-white hover:bg-[#1e3c2f] md:text-lg"
-                    disabled={isSubmitting}
+                    disabled={isSubmittingVideoForm}
                   >
-                    Enviar postulación
+                    {isSubmittingVideoForm
+                      ? "Enviando..."
+                      : "Enviar postulación"}
                   </Button>
                 </div>
               </form>
@@ -370,9 +371,10 @@ export default function ApplySection() {
                 </div>
                 <Button
                   type="submit"
+                  disabled={isSubmittingForm}
                   className="px-6 py-3 text-lg text-white hover:bg-[#1e3c2f] md:bg-[#2c5545]"
                 >
-                  Enviar postulación
+                  {isSubmittingForm ? "Enviando..." : "Enviar postulación"}
                 </Button>
               </form>
             </CardContent>

@@ -1,4 +1,5 @@
 "use server";
+import { redirect } from "next/navigation";
 import { Constants } from "~/lib/contants";
 import { applicantSchema } from "~/schema/applicantInfo";
 import { formSchema } from "~/schema/form";
@@ -104,6 +105,8 @@ export async function formSubmit(data: FormData): Promise<FormState> {
   void fetch(`${Constants.baseUrl}/api/sendEmail/${application.id}`, {
     method: "GET",
   });
+
+  redirect("/postulacion-enviada");
 
   return { message: "User registered" };
 }

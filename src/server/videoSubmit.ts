@@ -1,4 +1,5 @@
 "use server";
+import { redirect } from "next/navigation";
 import { Constants } from "~/lib/contants";
 import { applicantSchema } from "~/schema/applicantInfo";
 import { videoFormSchema } from "~/schema/videoForm";
@@ -78,6 +79,7 @@ export async function videoSubmit(data: FormData) {
   void fetch(`${Constants.baseUrl}/api/sendEmail/${application.id}`, {
     method: "GET",
   });
+  redirect("/postulacion-enviada");
 
   return { message: "aplpicaiton created" };
 }
