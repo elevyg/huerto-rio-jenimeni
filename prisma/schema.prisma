@@ -10,11 +10,31 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Post {
+model BaseApplication {
     id        Int      @id @default(autoincrement())
-    name      String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    groups    String[]
 
-    @@index([name])
+    formApplication  FormApplication?
+    videoApplication VideoApplication?
+
+    @@index([createdAt])
+}
+
+model FormApplication {
+    id            Int             @id @default(autoincrement())
+    application   BaseApplication @relation(fields: [applicationId], references: [id])
+    applicationId Int             @unique
+    why           String
+    experience    String
+    knowledge     String
+    skills        String
+}
+
+model VideoApplication {
+    id            Int             @id @default(autoincrement())
+    application   BaseApplication @relation(fields: [applicationId], references: [id])
+    applicationId Int             @unique
+    videoURL      String
 }

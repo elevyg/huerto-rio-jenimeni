@@ -1,10 +1,14 @@
+"use server";
 import { formSchema as schema } from "~/schema/form";
+import { db } from "~/server/db";
 
 export type FormState = {
   message: string;
   fields?: Record<string, string>;
   issues?: string[];
 };
+
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
 
 export async function onSubmitAction(
   prevState: FormState,
@@ -34,7 +38,26 @@ export async function onSubmitAction(
     };
   }
 
-  console.log(parsed.data);
+  const application = await db.baseApplication.create({
+    data: {
+      groups: parsed.data.groups,
+      formApplication: {
+        create: {
+          why: parsed.data.why,
+          experience: parsed.data.experience,
+          knowledge: parsed.data.knowledge,
+          skills: parsed.data.skills,
+        },
+      },
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  void fetch(`${baseUrl}/api/sendEmail/${application.id}`, {
+    method: "GET",
+  });
 
   return { message: "User registered" };
 }

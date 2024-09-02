@@ -12,9 +12,4 @@ export const formSchema = z.object({
   skills: z.string().min(10, "La respuesta debe tener al menos 10 caracteres"),
 });
 
-const videoSchema = z.object({
-  groups: z.array(z.string()).min(1, "Selecciona al menos un grupo"),
-  video: z.instanceof(File),
-});
-
 export type FormData = z.infer<typeof formSchema>;
