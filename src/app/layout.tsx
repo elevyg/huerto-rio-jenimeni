@@ -16,7 +16,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable}`}>
+    <html lang="en" className={`${GeistSans.variable} scroll-smooth`}>
       <body className="bg-[#f4f1ec]">
         <Navbar />
         <div className="mt-12 min-h-screen bg-[#f4f1ec] text-[#333333]">
