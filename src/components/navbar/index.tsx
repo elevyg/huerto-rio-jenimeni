@@ -38,7 +38,10 @@ export default function Navbar() {
               alt="Huerto Río Jeinimeni Logo"
               width={60}
               height={60}
+              sizes="(max-width: 768px) 60px, 60px"
               className="mr-4 rounded-full"
+              priority
+              loading="eager"
             />
           </Link>
           <h1 className="hidden text-xl font-semibold md:block">

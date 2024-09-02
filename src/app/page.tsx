@@ -20,6 +20,8 @@ export default function Component() {
           priority
           quality={90}
           className="z-10 object-cover"
+          blurDataURL={`/_next/image?url=/images/huerto.jpg&w=16&q=1`}
+          placeholder="blur"
         />
         <div className="z-20 mb-8 px-8 text-white md:mb-0 md:flex-1">
           <h2 className="mb-6 font-serif text-3xl leading-tight md:text-5xl">
@@ -46,6 +48,8 @@ export default function Component() {
             className="w-full rounded-lg"
             loading="lazy"
             sizes="(max-width: 768px) 100vw, 50vw"
+            blurDataURL={`/_next/image?url=/images/invernadero.jpg&w=16&q=1`}
+            placeholder="blur"
           />
         </div>
         <div className="md:w-1/2 md:pl-12">
@@ -107,8 +111,10 @@ export default function Component() {
             width={600}
             height={400}
             className="w-full rounded-lg object-cover"
-            priority
             loading="eager"
+            blurDataURL={`/_next/image?url=/images/voluntarios.jpg&w=16&q=1`}
+            placeholder="blur"
+            sizes="(max-width: 768px) 100vw, 50vw"
           />
         </div>
       </section>
