@@ -4,8 +4,10 @@ import { X } from "lucide-react";
 import { useRef, useState, type ComponentProps } from "react";
 import { useFormState } from "react-dom";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
+import { Input } from "~/components/ui/input";
 import {
   MultiSelector,
   MultiSelectorContent,
@@ -17,6 +19,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Textarea } from "~/components/ui/textarea";
 import { schedule } from "~/data/program-data";
+import { applicantSchema } from "~/schema/applicantInfo";
 import { formSchema, type FormData } from "~/schema/form";
 import { onSubmitAction } from "~/server/formSubmit";
 import { videoSubmit } from "~/server/videoSubmit";
@@ -26,6 +29,10 @@ const options = schedule.map((program) => ({
   value: program.group,
   label: `${program.group} - ${program.dateRange}`,
 }));
+
+const completeFormSchema = formSchema.merge(applicantSchema);
+
+type CompleteFormSchema = z.infer<typeof completeFormSchema>;
 
 export default function ApplySection() {
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
@@ -49,14 +56,17 @@ export default function ApplySection() {
     handleSubmit,
     formState: { errors },
     setValue: setFormValue,
-  } = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+  } = useForm<CompleteFormSchema>({
+    resolver: zodResolver(formSchema.merge(applicantSchema)),
     defaultValues: {
       groups: [],
       why: "",
       experience: "",
       knowledge: "",
       skills: "",
+      name: "",
+      phone: "",
+      email: "",
       ...(state?.fields ?? {}),
     },
   });
@@ -91,6 +101,66 @@ export default function ApplySection() {
       <h2 className="mb-6 font-serif text-2xl md:text-3xl">
         Aplicar al Programa
       </h2>
+      <Card className="mb-6">
+        <CardContent>
+          <form className="mt-6 space-y-6">
+            <div>
+              <label htmlFor="name" className="mb-2 block text-base md:text-lg">
+                Nombre
+              </label>
+              <Input
+                id="name"
+                {...register("name")}
+                placeholder="Tu nombre completo"
+                className="w-full"
+              />
+              {errors.name && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.name.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <label
+                htmlFor="phone"
+                className="mb-2 block text-base md:text-lg"
+              >
+                Teléfono
+              </label>
+              <Input
+                id="phone"
+                {...register("phone")}
+                placeholder="Tu número de teléfono"
+                className="w-full"
+              />
+              {errors.phone && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.phone.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <label
+                htmlFor="email"
+                className="mb-2 block text-base md:text-lg"
+              >
+                Correo Electrónico
+              </label>
+              <Input
+                id="email"
+                {...register("email")}
+                placeholder="Tu correo electrónico"
+                className="w-full"
+              />
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.email.message}
+                </p>
+              )}
+            </div>
+          </form>
+        </CardContent>
+      </Card>
       <Tabs defaultValue="video">
         <TabsList className="mb-6">
           <TabsTrigger value="video" className="text-base md:text-lg">
