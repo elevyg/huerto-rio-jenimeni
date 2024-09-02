@@ -1,5 +1,10 @@
 "use server";
+import { Constants } from "~/lib/contants";
+import { applicantSchema } from "~/schema/applicantInfo";
 import { videoFormSchema } from "~/schema/videoForm";
+import { db } from "~/server/db";
+
+const schema = videoFormSchema.merge(applicantSchema);
 
 export async function videoSubmit(data: FormData) {
   const formData = Object.fromEntries(data) as Record<string, string>;
@@ -8,16 +13,71 @@ export async function videoSubmit(data: FormData) {
     formData.groups = JSON.parse(formData.groups);
   }
 
-  const parsed = videoFormSchema.safeParse(formData);
+  const parsed = schema.safeParse(formData);
   if (!parsed.success) {
+    console.log(JSON.stringify(parsed.error.issues));
     return {
       message: "Invalid form data",
       issues: parsed.error.issues,
     };
   }
-  if (!formData.video) {
-    return {
-      message: "No video file provided",
-    };
+
+  let user = await db.user.findUnique({
+    where: {
+      email: parsed.data.email,
+    },
+  });
+
+  if (!user) {
+    user = await db.user.create({
+      data: {
+        name: parsed.data.name,
+        phone: parsed.data.phone,
+        email: parsed.data.email,
+      },
+    });
   }
+  const application = await db.baseApplication.upsert({
+    where: {
+      id: user.baseApplicationId ?? 0,
+    },
+    create: {
+      User: {
+        connect: {
+          id: user.id,
+        },
+      },
+      groups: parsed.data.groups,
+      videoApplication: {
+        create: {
+          videoURL: parsed.data.videoURL,
+        },
+      },
+    },
+    update: {
+      groups: parsed.data.groups,
+      videoApplication: {
+        upsert: {
+          where: {
+            applicationId: user.baseApplicationId ?? 0,
+          },
+          create: {
+            videoURL: parsed.data.videoURL,
+          },
+          update: {
+            videoURL: parsed.data.videoURL,
+          },
+        },
+      },
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  void fetch(`${Constants.baseUrl}/api/sendEmail/${application.id}`, {
+    method: "GET",
+  });
+
+  return { message: "aplpicaiton created" };
 }

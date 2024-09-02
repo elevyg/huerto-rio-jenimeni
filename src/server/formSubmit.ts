@@ -1,4 +1,5 @@
 "use server";
+import { Constants } from "~/lib/contants";
 import { applicantSchema } from "~/schema/applicantInfo";
 import { formSchema } from "~/schema/form";
 import { db } from "~/server/db";
@@ -11,9 +12,7 @@ export type FormState = {
   issues?: string[];
 };
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
-
-export async function onSubmitAction(data: FormData): Promise<FormState> {
+export async function formSubmit(data: FormData): Promise<FormState> {
   const formData = Object.fromEntries(data) as Record<string, string>;
   if ("groups" in formData) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -102,7 +101,7 @@ export async function onSubmitAction(data: FormData): Promise<FormState> {
     },
   });
 
-  void fetch(`${baseUrl}/api/sendEmail/${application.id}`, {
+  void fetch(`${Constants.baseUrl}/api/sendEmail/${application.id}`, {
     method: "GET",
   });
 
