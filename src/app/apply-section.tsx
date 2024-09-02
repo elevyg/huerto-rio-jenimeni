@@ -109,9 +109,7 @@ export default function ApplySection() {
       form.append("phone", applicantInfo.phone);
       form.append("email", applicantInfo.email);
 
-      void onSubmitAction(form);
-
-      console.log("client form", form);
+      await onSubmitAction(form);
     },
     (error) => {
       console.log(error);
@@ -250,7 +248,6 @@ export default function ApplySection() {
                     }}
                     onClientUploadComplete={(res) => {
                       // Do something with the response
-                      console.log(res);
                       const url = res?.[0]?.url;
                       if (!url) return;
                       setVideoUrl(url);

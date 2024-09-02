@@ -1,6 +1,9 @@
 "use server";
-import { formSchema as schema } from "~/schema/form";
+import { applicantSchema } from "~/schema/applicantInfo";
+import { formSchema } from "~/schema/form";
 import { db } from "~/server/db";
+
+const schema = formSchema.merge(applicantSchema);
 
 export type FormState = {
   message: string;
@@ -10,15 +13,13 @@ export type FormState = {
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
 
-export async function onSubmitAction(
-  prevState: FormState,
-  data: FormData,
-): Promise<FormState> {
+export async function onSubmitAction(data: FormData): Promise<FormState> {
   const formData = Object.fromEntries(data) as Record<string, string>;
   if ("groups" in formData) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     formData.groups = JSON.parse(formData.groups);
   }
+
   const parsed = schema.safeParse(formData);
 
   if (!parsed.success) {
@@ -38,8 +39,32 @@ export async function onSubmitAction(
     };
   }
 
-  const application = await db.baseApplication.create({
-    data: {
+  let user = await db.user.findUnique({
+    where: {
+      email: parsed.data.email,
+    },
+  });
+
+  if (!user) {
+    user = await db.user.create({
+      data: {
+        name: parsed.data.name,
+        phone: parsed.data.phone,
+        email: parsed.data.email,
+      },
+    });
+  }
+
+  const application = await db.baseApplication.upsert({
+    where: {
+      id: user.baseApplicationId ?? 0,
+    },
+    create: {
+      User: {
+        connect: {
+          id: user.id,
+        },
+      },
       groups: parsed.data.groups,
       formApplication: {
         create: {
@@ -47,6 +72,28 @@ export async function onSubmitAction(
           experience: parsed.data.experience,
           knowledge: parsed.data.knowledge,
           skills: parsed.data.skills,
+        },
+      },
+    },
+    update: {
+      groups: parsed.data.groups,
+      formApplication: {
+        upsert: {
+          where: {
+            applicationId: user.baseApplicationId ?? 0,
+          },
+          create: {
+            why: parsed.data.why,
+            experience: parsed.data.experience,
+            knowledge: parsed.data.knowledge,
+            skills: parsed.data.skills,
+          },
+          update: {
+            why: parsed.data.why,
+            experience: parsed.data.experience,
+            knowledge: parsed.data.knowledge,
+            skills: parsed.data.skills,
+          },
         },
       },
     },

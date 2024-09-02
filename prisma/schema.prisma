@@ -10,6 +10,15 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+model User {
+    id                Int              @id @default(autoincrement())
+    name              String
+    phone             String
+    email             String           @unique
+    baseApplication   BaseApplication? @relation(fields: [baseApplicationId], references: [id])
+    baseApplicationId Int?
+}
+
 model BaseApplication {
     id        Int      @id @default(autoincrement())
     createdAt DateTime @default(now())
@@ -18,6 +27,7 @@ model BaseApplication {
 
     formApplication  FormApplication?
     videoApplication VideoApplication?
+    User             User[]
 
     @@index([createdAt])
 }
