@@ -22,7 +22,7 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   return (
     <motion.header
-      className="sticky top-0 z-10 z-50 border-b border-[#2c5545] bg-[#f4f1ec] p-4 text-[#2c5545]"
+      className="sticky top-0 z-50 border-b border-[#2c5545] bg-[#f4f1ec] p-4 text-[#2c5545]"
       variants={{
         visible: { translateY: 0 },
         hidden: { translateY: "-100%" },
