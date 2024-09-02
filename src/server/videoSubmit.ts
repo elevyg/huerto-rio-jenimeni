@@ -79,7 +79,6 @@ export async function videoSubmit(data: FormData) {
   void fetch(`${Constants.baseUrl}/api/sendEmail/${application.id}`, {
     method: "GET",
   });
-  redirect("/postulacion-enviada");
 
-  return { message: "aplpicaiton created" };
+  redirect("/postulacion-enviada");
 }
