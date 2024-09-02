@@ -249,10 +249,6 @@ export default function ApplySection() {
                         if (!ready) return <div>...</div>;
                         return "Subir video";
                       },
-                      // allowedContent({ isUploading }) {
-                      //   if (isUploading) return "Subiendo video";
-                      //   return `Video, máximo 16MB`;
-                      // },
                     }}
                     className="mt-4 items-start justify-start self-start ut-button:bg-[#937a4b] ut-button:ut-readying:bg-[#0f1e18]"
                     onUploadError={(error) => {
