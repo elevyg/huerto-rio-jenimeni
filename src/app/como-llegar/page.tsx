@@ -1,12 +1,13 @@
 "use client";
 import { APIProvider, Map, Marker } from "@vis.gl/react-google-maps";
 import { MapPinIcon } from "lucide-react";
+import Link from "next/link";
 import ContactSection from "~/components/contanct-section";
 import { Button } from "~/components/ui/button";
 
 export default function Component() {
   return (
-    <div>
+    <div className="mx-4 md:mx-8">
       <section className="mb-24">
         <h1 className="mb-6 font-serif text-4xl">
           Cómo Llegar a Huerto Río Jeinimeni
@@ -14,7 +15,7 @@ export default function Component() {
         <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_TOKEN!}>
           <div className="mb-6 flex justify-center">
             <Map
-              className="h-[40vh] w-[90vw] overflow-hidden rounded-md"
+              className="h-[40vh] w-full overflow-hidden rounded-md"
               style={{ width: "auto", height: "40vh" }}
               defaultCenter={{
                 lat: -46.58920260557373,
@@ -37,7 +38,7 @@ export default function Component() {
             <p className="mb-4">
               En la costa sur del Lago General Carrera y en la rivera oeste del
               Río Jeinimeni se genera una gran terraza sedimentaria que da lugar
-              a #HuertoRioJeinimeni.
+              a nuestro hermoso huerto.
             </p>
             <div className="mb-4 flex items-center">
               <MapPinIcon className="mr-2 text-[#2c5545]" />
@@ -65,7 +66,9 @@ export default function Component() {
           staff ofrece un viaje hacia el pueblo al término de la jornada
           laboral. El regreso es responsabilidad individual.
         </p>
-        <Button className="mb-8">Solicitar Transporte</Button>
+        <Link href="https://ventas.ferrypatagonia.com/" target="_blank">
+          <Button className="mb-8">Comprar barcaza</Button>
+        </Link>
 
         <h3 className="mb-4 font-serif text-2xl">Lugares de Interés</h3>
         <ul className="list-inside list-disc space-y-2">
@@ -75,12 +78,12 @@ export default function Component() {
           </li>
           <li>A 17 km se encuentran los humedales y playa de Bahía Jara</li>
           <li>
-            A 30 km se ubica el 1er acceso al P.N. Patagonia sendero
-            #CuevadelasManos y #ValleLunar
+            A 30 km se ubica el 1er acceso al P.N. Patagonia sendero Cueva de
+            las Manos y el Valle Lunar
           </li>
           <li>
-            A 60 km se ubica el acceso a sendero #EscorialdelSilencio,
-            #MiradordelLago y #SenderodelosValles
+            A 60 km se ubica el acceso a sendero Escorial del Silencio, Mirador
+            del Lago y Sendero de los Valles
           </li>
         </ul>
       </section>
