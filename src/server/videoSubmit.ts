@@ -71,12 +71,14 @@ export async function videoSubmit(data: FormData) {
         },
       },
     },
-    select: {
-      id: true,
+    include: {
+      User: true,
+      formApplication: true,
+      videoApplication: true,
     },
   });
 
-  void sendEmail({ applicationId: application.id.toString() });
+  await sendEmail({ application });
 
   redirect("/postulacion-enviada");
 }
