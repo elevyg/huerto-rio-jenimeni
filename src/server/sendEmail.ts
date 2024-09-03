@@ -2,7 +2,7 @@
 import jwt from "jsonwebtoken";
 import { Constants } from "~/lib/contants";
 
-export default function sendEmail({
+export default async function sendEmail({
   applicationId,
 }: {
   applicationId: string;

@@ -76,7 +76,7 @@ export async function videoSubmit(data: FormData) {
     },
   });
 
-  sendEmail({ applicationId: application.id.toString() });
+  void sendEmail({ applicationId: application.id.toString() });
 
   redirect("/postulacion-enviada");
 }

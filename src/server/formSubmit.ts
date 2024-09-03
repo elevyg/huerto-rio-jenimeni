@@ -102,7 +102,7 @@ export async function formSubmit(data: FormData): Promise<FormState> {
     },
   });
 
-  sendEmail({ applicationId: application.id.toString() });
+  void sendEmail({ applicationId: application.id.toString() });
 
   redirect("/postulacion-enviada");
 }
