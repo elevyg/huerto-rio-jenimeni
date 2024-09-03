@@ -13,6 +13,7 @@ export default function Component() {
         className="relative mb-24 flex h-[70vh] flex-col items-center justify-center overflow-hidden rounded-lg md:flex-row"
       >
         <Image
+          id="hero-image"
           src="/images/huerto.jpg"
           alt="Huerto Río Jeinimeni"
           fill

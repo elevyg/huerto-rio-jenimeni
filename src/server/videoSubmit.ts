@@ -1,9 +1,9 @@
 "use server";
 import { redirect } from "next/navigation";
-import { Constants } from "~/lib/contants";
 import { applicantSchema } from "~/schema/applicantInfo";
 import { videoFormSchema } from "~/schema/videoForm";
 import { db } from "~/server/db";
+import sendEmail from "~/server/sendEmail";
 
 const schema = videoFormSchema.merge(applicantSchema);
 
@@ -76,9 +76,7 @@ export async function videoSubmit(data: FormData) {
     },
   });
 
-  void fetch(`${Constants.baseUrl}/api/sendEmail/${application.id}`, {
-    method: "GET",
-  });
+  sendEmail({ applicationId: application.id.toString() });
 
   redirect("/postulacion-enviada");
 }

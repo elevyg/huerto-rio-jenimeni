@@ -1,9 +1,9 @@
 "use server";
 import { redirect } from "next/navigation";
-import { Constants } from "~/lib/contants";
 import { applicantSchema } from "~/schema/applicantInfo";
 import { formSchema } from "~/schema/form";
 import { db } from "~/server/db";
+import sendEmail from "~/server/sendEmail";
 
 const schema = formSchema.merge(applicantSchema);
 
@@ -102,11 +102,7 @@ export async function formSubmit(data: FormData): Promise<FormState> {
     },
   });
 
-  void fetch(`${Constants.baseUrl}/api/sendEmail/${application.id}`, {
-    method: "GET",
-  });
+  sendEmail({ applicationId: application.id.toString() });
 
   redirect("/postulacion-enviada");
-
-  return { message: "User registered" };
 }
