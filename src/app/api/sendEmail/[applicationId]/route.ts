@@ -17,8 +17,12 @@ export const GET = async (
   const resend = new Resend(process.env.RESEND_API_KEY);
 
   await resend.emails.send({
-    from: "Huerto Jeinimeni <huerto@jeinimeni.com>",
-    to: [application.User?.email, "huertojeinimeni@gmail.com"],
+    from: "Huerto Jeinimeni <huerto@mail.jeinimeni.com>",
+    to: [
+      application.User?.email,
+      "huerto@jeinimeni.com",
+      "huertojeinimeni@gmail.com",
+    ],
     subject: `¡Gracias ${application.User?.name} por tu interés en Huerto Jeinimeni!`,
     react: ApplicantEmail({ application }),
   });
