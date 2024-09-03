@@ -129,7 +129,7 @@ export default function ApplySection() {
   return (
     <section id="apply" className="mb-24">
       <h2 className="mb-6 font-serif text-2xl md:text-3xl">
-        Aplicar al Programa
+        Postular al programa de pasantes
       </h2>
       <Card className="mb-6">
         <CardContent>

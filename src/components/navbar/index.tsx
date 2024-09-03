@@ -64,7 +64,7 @@ export default function Navbar() {
             </li>
             <li>
               <Link href="/#apply" className="hover:underline" scroll>
-                Aplicar
+                Postular
               </Link>
             </li>
             <li>

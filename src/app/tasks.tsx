@@ -36,14 +36,18 @@ const TaskBox = ({ task, isActive }: { task: Task; isActive: boolean }) => (
       <TooltipTrigger asChild>
         <div
           className={`h-20 w-full ${
-            isActive ? task.color : "bg-gray-200"
+            isActive ? task.color : "bg-none"
           } relative overflow-hidden transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-md`}
         >
           <div
             className={`absolute inset-0 flex flex-col items-center justify-center ${isActive ? "text-white" : "text-gray-800"} p-1 text-center text-xs`}
           >
-            <span className="mb-1 text-2xl lg:hidden">{task.emoji}</span>
-            <p className="lg:hidden">{task.name}</p>
+            {isActive && (
+              <>
+                <span className="mb-1 text-2xl lg:hidden">{task.emoji}</span>
+                <p className="lg:hidden">{task.name}</p>
+              </>
+            )}
           </div>
         </div>
       </TooltipTrigger>
