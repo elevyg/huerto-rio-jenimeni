@@ -159,7 +159,13 @@ export default function ApplySection() {
               </label>
               <Input
                 id="phone"
-                {...applicantInfoForm.register("phone")}
+                {...(applicantInfoForm.register("phone"),
+                {
+                  onBlur: (e: React.FocusEvent<HTMLInputElement>) => {
+                    const trimmedValue = e.target.value.replace(/\s+/g, "");
+                    applicantInfoForm.setValue("phone", trimmedValue);
+                  },
+                })}
                 placeholder="Tu número de teléfono"
                 className="w-full"
               />
@@ -178,7 +184,12 @@ export default function ApplySection() {
               </label>
               <Input
                 id="email"
-                {...applicantInfoForm.register("email")}
+                {...applicantInfoForm.register("email", {
+                  onBlur: (e: React.FocusEvent<HTMLInputElement>) => {
+                    const trimmedValue = e.target.value.replace(/\s+/g, "");
+                    applicantInfoForm.setValue("email", trimmedValue);
+                  },
+                })}
                 placeholder="Tu correo electrónico"
                 className="w-full"
               />
